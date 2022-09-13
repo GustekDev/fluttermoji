@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermoji/defaults.dart';
-import 'package:fluttermoji/fluttermojiSaveWidget.dart';
-import 'package:fluttermoji/fluttermojiThemeData.dart';
+import 'package:fluttermoji/fluttermoji.dart';
 import 'fluttermoji_assets/fluttermojimodel.dart';
-import 'package:get/get.dart';
-import 'fluttermojiController.dart';
 
 /// This widget provides the user with a UI for customizing their Fluttermoji
 ///
@@ -31,10 +28,10 @@ class FluttermojiCustomizer extends StatefulWidget {
     Key? key,
     this.scaffoldHeight,
     this.scaffoldWidth,
+    FluttermojiController? controller,
     FluttermojiThemeData? theme,
     List<String>? attributeTitles,
     List<String>? attributeIcons,
-    this.autosave = true,
   })  : assert(
           attributeTitles == null || attributeTitles.length == attributesCount,
           "List of Attribute Titles must be of length $attributesCount.\n"
@@ -48,6 +45,7 @@ class FluttermojiCustomizer extends StatefulWidget {
         this.theme = theme ?? FluttermojiThemeData.standard,
         this.attributeTitles = attributeTitles ?? defaultAttributeTitles,
         this.attributeIcons = attributeIcons ?? defaultAttributeIcons,
+        this.controller = controller ?? FluttermojiController(Fluttermoji.defaultEmoji()),
         super(key: key);
 
   final double? scaffoldHeight;
@@ -78,12 +76,7 @@ class FluttermojiCustomizer extends StatefulWidget {
   /// **Only SVG files are supported as of now.**
   final List<String> attributeIcons;
 
-  /// Will save the selection automatically everytime the user selects
-  /// something when set to `true` .
-  ///
-  /// If set to `false` you may want to implement a [FluttermojiSaveWidget]
-  /// in your app to let users save their selection manually.
-  final bool autosave;
+  final FluttermojiController controller;
 
   static const int attributesCount = 11;
 
@@ -93,7 +86,6 @@ class FluttermojiCustomizer extends StatefulWidget {
 
 class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
     with SingleTickerProviderStateMixin {
-  late FluttermojiController fluttermojiController;
   late TabController tabController;
   final attributesCount = 11;
   var heightFactor = 0.4, widthFactor = 0.95;
@@ -101,35 +93,17 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
   @override
   void initState() {
     super.initState();
-
-    var _fluttermojiController;
-    Get.put(FluttermojiController());
-    _fluttermojiController = Get.find<FluttermojiController>();
-
-    setState(() {
-      tabController = TabController(length: attributesCount, vsync: this);
-      fluttermojiController = _fluttermojiController;
-    });
-
+    tabController = TabController(length: attributesCount, vsync: this);
     tabController.addListener(() {
       setState(() {});
     });
   }
 
-  @override
-  void dispose() {
-    // This ensures that unsaved edits are reverted
-    fluttermojiController.restoreState();
-    super.dispose();
-  }
-
   void onTapOption(int index, int? i, AttributeItem attribute) {
     if (index != i) {
       setState(() {
-        fluttermojiController.selectedOptions[attribute.key] = index;
+        this.widget.controller.set(attribute.key, index);
       });
-      fluttermojiController.updatePreview();
-      if (widget.autosave) fluttermojiController.setFluttermoji();
     }
   }
 
@@ -158,7 +132,7 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
             (index) => AttributeItem(
                 iconAsset: widget.attributeIcons[index],
                 title: widget.attributeTitles[index],
-                key: attributeKeys[index]),
+                key: Attribute.values[index]),
             growable: false),
       ),
     );
@@ -228,14 +202,10 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
         attributeIndex < attributes.length;
         attributeIndex++) {
       var attribute = attributes[attributeIndex];
-      if (!fluttermojiController.selectedOptions.containsKey(attribute.key)) {
-        fluttermojiController.selectedOptions[attribute.key] = 0;
-      }
-
       /// Number of options available for said [attribute]
       /// Eg: "Hairstyle" attribue has 38 options
       var attributeListLength =
-          fluttermojiProperties[attribute.key!]!.property!.length;
+          fluttermojiProperties[attribute.key]!.property.length;
 
       /// Number of tiles per horizontal row,
       int gridCrossAxisCount;
@@ -249,7 +219,7 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
       else
         gridCrossAxisCount = 4;
 
-      int? i = fluttermojiController.selectedOptions[attribute.key];
+      int i = this.widget.controller.value.get(attribute.key);
 
       /// Build the main Tile Grid with all the options from the attribute
       var _tileGrid = GridView.builder(
@@ -269,7 +239,7 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
             margin: widget.theme.tileMargin,
             padding: widget.theme.tilePadding,
             child: SvgPicture.string(
-              fluttermojiController.getComponentSVG(attribute.key, index),
+              this.widget.controller.getComponentSVG(attribute.key, index),
               height: 20,
               semanticsLabel: 'Your Fluttermoji',
               placeholderBuilder: (context) => Center(

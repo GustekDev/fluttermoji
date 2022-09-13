@@ -1,25 +1,26 @@
 import 'package:flutter/foundation.dart';
+import 'package:fluttermoji/fluttermojiFunctions.dart';
 
 /// Maps attribute keys to the attribute value list
-final Map<String, FluttermojiPropertyItem> fluttermojiProperties = {
-  "style": FluttermojiPropertyItem(title: "Style", property: FluttermojiStyle),
-  "topType": FluttermojiPropertyItem(title: "Hair", property: TopType),
-  "accessoriesType":
+final Map<Attribute, FluttermojiPropertyItem> fluttermojiProperties = {
+  Attribute.style: FluttermojiPropertyItem(title: "Style", property: FluttermojiStyle),
+  Attribute.topType: FluttermojiPropertyItem(title: "Hair", property: TopType),
+  Attribute.accessoriesType:
       FluttermojiPropertyItem(title: "Accessory", property: AccessoriesType),
-  "hairColor":
+  Attribute.hairColor:
       FluttermojiPropertyItem(title: "Hair\nColor", property: HairColor),
-  "facialHairType":
+  Attribute.facialHairType:
       FluttermojiPropertyItem(title: "Facial\nHair", property: FacialHairType),
-  "facialHairColor": FluttermojiPropertyItem(
+  Attribute.facialHairColor: FluttermojiPropertyItem(
       title: "F-Hair\nColor", property: FacialHairColor),
-  "clotheType": FluttermojiPropertyItem(title: "Outfit", property: ClotheType),
-  "clotheColor":
+  Attribute.clotheType: FluttermojiPropertyItem(title: "Outfit", property: ClotheType),
+  Attribute.clotheColor:
       FluttermojiPropertyItem(title: "Outfit\nColor", property: ClotheColor),
-  "eyeType": FluttermojiPropertyItem(title: "Eye", property: EyeType),
-  "eyebrowType":
+  Attribute.eyeType: FluttermojiPropertyItem(title: "Eye", property: EyeType),
+  Attribute.eyebrowType:
       FluttermojiPropertyItem(title: "Eyebrow", property: EyebrowType),
-  "mouthType": FluttermojiPropertyItem(title: "Mouth", property: MouthType),
-  "skinColor": FluttermojiPropertyItem(title: "Skin", property: SkinColor),
+  Attribute.mouthType: FluttermojiPropertyItem(title: "Mouth", property: MouthType),
+  Attribute.skinColor: FluttermojiPropertyItem(title: "Skin", property: SkinColor),
 };
 
 /// Models the metadata needed for rendering widgets in the UI
@@ -27,22 +28,22 @@ final Map<String, FluttermojiPropertyItem> fluttermojiProperties = {
 /// 'ExpandedFluttermojiCardItem' has been renamed to Attribute Item
 class AttributeItem {
   String title;
-  String? key;
+  Attribute key;
   String? iconAsset;
   double? iconsize;
   AttributeItem(
-      {this.iconsize, this.title = "Unnamed", this.key, this.iconAsset});
+      {this.iconsize, this.title = "Unnamed", this.key = Attribute.skinColor, this.iconAsset});
 }
 
 class FluttermojiPropertyItem extends ChangeNotifier {
-  String title;
+  final String title;
   int choice;
-  List<String>? property;
+  final List<String> property;
   FluttermojiPropertyItem({
     this.title = "Unnamed",
     this.choice = 0,
-    this.property,
-  });
+    property,
+  }): property = property ?? [];
 }
 
 const String emptySVGIcon = '''

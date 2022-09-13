@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 25,
           ),
           FluttermojiCircleAvatar(
+            Fluttermoji.defaultEmoji(),
             backgroundColor: Colors.grey[200],
             radius: 100,
           ),
@@ -82,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.edit),
                     label: Text("Customize"),
                     onPressed: () => Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => NewPage())),
+                        new MaterialPageRoute(builder: (context) => NewPage(FluttermojiController(Fluttermoji.defaultEmoji())))),
                   ),
                 ),
               ),
@@ -99,7 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class NewPage extends StatelessWidget {
-  const NewPage({Key? key}) : super(key: key);
+
+  final FluttermojiController fluttermojiController;
+  const NewPage(this.fluttermojiController, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +116,13 @@ class NewPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
-                child: FluttermojiCircleAvatar(
-                  radius: 100,
-                  backgroundColor: Colors.grey[200],
+                child: AnimatedBuilder(
+                  animation: this.fluttermojiController,
+                  builder: (context, child) => FluttermojiCircleAvatar(
+                    this.fluttermojiController.value,
+                    radius: 100,
+                    backgroundColor: Colors.grey[200],
+                  ),
                 ),
               ),
               SizedBox(
@@ -127,7 +134,6 @@ class NewPage extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Spacer(),
-                    FluttermojiSaveWidget(),
                   ],
                 ),
               ),
@@ -135,8 +141,8 @@ class NewPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 30),
                 child: FluttermojiCustomizer(
+                  controller: this.fluttermojiController,
                   scaffoldWidth: min(600, _width * 0.85),
-                  autosave: false,
                   theme: FluttermojiThemeData(
                       boxDecoration: BoxDecoration(boxShadow: [BoxShadow()])),
                 ),

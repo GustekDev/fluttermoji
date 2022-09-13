@@ -32,21 +32,3 @@ const List<String> defaultAttributeTitles = [
   "Skin",
   "Accessories"
 ];
-
-/// List of keys used internally by this library to dereference
-/// attributes and their values in the business logic.
-///
-/// This aspect is not modifiable by you at any stage of the app.
-const List<String> attributeKeys = [
-  "topType",
-  "hairColor",
-  "facialHairType",
-  "facialHairColor",
-  "clotheType",
-  "clotheColor",
-  "eyeType",
-  "eyebrowType",
-  "mouthType",
-  "skinColor",
-  "accessoriesType",
-];

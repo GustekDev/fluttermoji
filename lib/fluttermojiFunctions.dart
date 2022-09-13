@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttermoji/fluttermoji.dart';
 
 import 'fluttermoji_assets/clothes/clothes.dart';
 import 'fluttermoji_assets/face/eyebrow/eyebrow.dart';
@@ -14,63 +12,86 @@ import 'fluttermoji_assets/top/accessories/accessories.dart';
 import 'fluttermoji_assets/top/facialHair/facialHair.dart';
 import 'fluttermoji_assets/top/hairStyles/hairStyle.dart';
 
-class FluttermojiFunctions {
-  late Map<String, int> _decodedList;
-  FluttermojiFunctions() {
-    _decodedList = {
-      'topType': 4,
-      'accessoriesType': 0,
-      'hairColor': 1,
-      'facialHairType': 0,
-      'facialHairColor': 1,
-      'clotheType': 4,
-      'eyeType': 0,
-      'eyebrowType': 0,
-      'mouthType': 1,
-      'skinColor': 0,
-      'clotheColor': 1,
-      'style': 0,
-      'graphicType': 0
-    };
+enum Attribute {
+  topType,
+  accessoriesType,
+  hairColor,
+  facialHairType,
+  facialHairColor,
+  clotheType,
+  eyeType,
+  eyebrowType,
+  mouthType,
+  skinColor,
+  clotheColor,
+  style,
+  graphicType,
+}
+
+class Fluttermoji {
+  final Map<Attribute, int> selectedAttributes;
+
+  int get topType => selectedAttributes[Attribute.topType] ?? 4;
+
+  int get accessoriesType => selectedAttributes[Attribute.accessoriesType] ?? 0;
+
+  int get hairColor => selectedAttributes[Attribute.hairColor] ?? 1;
+
+  int get facialHairType => selectedAttributes[Attribute.facialHairType] ?? 0;
+
+  int get facialHairColor => selectedAttributes[Attribute.facialHairColor] ?? 1;
+
+  int get clotheType => selectedAttributes[Attribute.clotheType] ?? 4;
+
+  int get eyeType => selectedAttributes[Attribute.eyeType] ?? 0;
+
+  int get eyebrowType => selectedAttributes[Attribute.eyebrowType] ?? 0;
+
+  int get mouthType => selectedAttributes[Attribute.mouthType] ?? 1;
+
+  int get skinColor => selectedAttributes[Attribute.skinColor] ?? 0;
+
+  int get clotheColor => selectedAttributes[Attribute.clotheColor] ?? 1;
+
+  int get style => selectedAttributes[Attribute.style] ?? 0;
+
+  int get graphicType => selectedAttributes[Attribute.graphicType] ?? 0;
+
+  void set(Attribute attribute, int value) {
+    selectedAttributes[attribute] = value;
   }
 
-  String _getFluttermojiProperty(String type) {
-    return fluttermojiProperties[type]!
-        .property!
-        .elementAt(_decodedList[type]!);
+  int get(Attribute attribute) {
+    return selectedAttributes[attribute] ?? 0;
   }
 
-  /// Erase fluttermoji String and Map from local storage
-  Future<List<bool>> clearFluttermoji() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    return Future.wait([
-      pref.remove('fluttermojiSelectedOptions'),
-      pref.remove('fluttermoji'),
-    ]);
-  }
+  Fluttermoji.defaultEmoji() : selectedAttributes = Map();
 
   /// Decode your string containing the attributes to a SVG and render it
   /// by enclosing this string with a SvgPicture.string()
-  String decodeFluttermojifromString(String encodedData) {
-    if (encodedData != '') _decodedList = Map.from(jsonDecode(encodedData));
-
+  String getSVG() {
     String _fluttermojiStyle =
-        fluttermojiStyle[_getFluttermojiProperty('style')]!;
+        fluttermojiStyle[getFluttermojiProperty(Attribute.style, style)]!;
     String _clothe = Clothes.generateClothes(
-        clotheType: _getFluttermojiProperty('clotheType'),
-        clColor: _getFluttermojiProperty('clotheColor'))!;
+        clotheType: getFluttermojiProperty(Attribute.clotheType, clotheType),
+        clColor: getFluttermojiProperty(Attribute.clotheColor, clotheColor))!;
     String _facialhair = FacialHair.generateFacialHair(
-        facialHairType: _getFluttermojiProperty('facialHairType'),
-        fhColor: _getFluttermojiProperty('facialHairColor'))!;
-    String _mouth = mouth['${_getFluttermojiProperty('mouthType')}'];
+        facialHairType:
+            getFluttermojiProperty(Attribute.facialHairType, facialHairType),
+        fhColor:
+            getFluttermojiProperty(Attribute.facialHairColor, facialHairColor))!;
+    String _mouth =
+        mouth['${getFluttermojiProperty(Attribute.mouthType, mouthType)}'];
     String _nose = nose['Default'];
-    String _eyes = eyes['${_getFluttermojiProperty('eyeType')}'];
-    String _eyebrows = eyebrow['${_getFluttermojiProperty('eyebrowType')}'];
-    String _accessory = accessories[_getFluttermojiProperty('accessoriesType')];
+    String _eyes = eyes['${getFluttermojiProperty(Attribute.eyeType, eyeType)}'];
+    String _eyebrows =
+        eyebrow['${getFluttermojiProperty(Attribute.eyebrowType, eyebrowType)}'];
+    String _accessory = accessories[
+        getFluttermojiProperty(Attribute.accessoriesType, accessoriesType)];
     String _hair = HairStyle.generateHairStyle(
-        hairType: _getFluttermojiProperty('topType'),
-        hColor: _getFluttermojiProperty('hairColor'))!;
-    String _skin = skin[_getFluttermojiProperty('skinColor')];
+        hairType: getFluttermojiProperty(Attribute.topType, topType),
+        hColor: getFluttermojiProperty(Attribute.hairColor, hairColor))!;
+    String _skin = skin[getFluttermojiProperty(Attribute.skinColor, skinColor)];
     String _completeSVG = '''
 <svg width="264px" height="280px" viewBox="0 0 264 280" version="1.1"
 xmlns="http://www.w3.org/2000/svg"
@@ -110,39 +131,46 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     return _completeSVG;
   }
 
-  /// Retrieve the local user's fluttermoji attributes from local storage
-  /// and encode them to a Map of attributes
-  ///
-  /// returns a Future, you have to await on function call
-  Future<Map<String, dynamic>> encodeMySVGtoMap() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? _fluttermojiOptions = pref.getString('fluttermojiSelectedOptions');
-    if (_fluttermojiOptions == null || _fluttermojiOptions == '') {
-      Map<String, int> _fluttermojiOptionsMap =
-          Map.from(defaultFluttermojiOptions);
-      await pref.setString(
-          'fluttermojiSelectedOptions', jsonEncode(_fluttermojiOptionsMap));
-
-      return _fluttermojiOptionsMap;
-    }
-
-    return Map.from(jsonDecode(_fluttermojiOptions));
+  String getFluttermojiProperty(Attribute type, int value) {
+    return fluttermojiProperties[type]!.property.elementAt(value);
   }
 
-  /// Retrieve the local user's fluttermoji attributes from local storage
-  /// and encode them to a String containing a Map of attributes
-  ///
-  /// returns a Future, you have to await on function call
-  Future<String> encodeMySVGtoString() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? _fluttermojiOptions = pref.getString('fluttermojiSelectedOptions');
-    if (_fluttermojiOptions == null || _fluttermojiOptions == '') {
-      Map<String, int> _fluttermojiOptionsMap =
-          Map.from(defaultFluttermojiOptions);
-      await pref.setString(
-          'fluttermojiSelectedOptions', jsonEncode(_fluttermojiOptionsMap));
-      return jsonEncode(_fluttermojiOptionsMap);
-    }
-    return _fluttermojiOptions;
-  }
+  Fluttermoji.fromJson(Map<String, dynamic> json)
+      : selectedAttributes = Map.fromEntries(
+            Attribute.values.map((e) => MapEntry(e, json[e.toString()] ?? 0)));
+
+  static Map<String, dynamic> toJson(Fluttermoji value) => Map.fromEntries(
+      Attribute.values.map((e) => MapEntry(e.toString(), value.get(e))));
+
+  bool operator ==(Object other) =>
+      other is Fluttermoji &&
+      topType == other.topType &&
+      accessoriesType == other.accessoriesType &&
+      hairColor == other.hairColor &&
+      facialHairType == other.facialHairType &&
+      facialHairColor == other.facialHairColor &&
+      clotheType == other.clotheType &&
+      eyeType == other.eyeType &&
+      eyebrowType == other.eyebrowType &&
+      mouthType == other.mouthType &&
+      skinColor == other.skinColor &&
+      clotheColor == other.clotheColor &&
+      style == other.style &&
+      graphicType == other.graphicType;
+
+  int get hashCode => Object.hash(
+        topType,
+        accessoriesType,
+        hairColor,
+        facialHairType,
+        facialHairColor,
+        clotheType,
+        eyeType,
+        eyebrowType,
+        mouthType,
+        skinColor,
+        clotheColor,
+        style,
+        graphicType,
+      );
 }
