@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttermoji/defaults.dart';
 import 'package:fluttermoji/fluttermoji.dart';
+
 import 'fluttermoji_assets/fluttermojimodel.dart';
 
 /// This widget provides the user with a UI for customizing their Fluttermoji
@@ -30,22 +30,9 @@ class FluttermojiCustomizer extends StatefulWidget {
     this.scaffoldWidth,
     FluttermojiController? controller,
     FluttermojiThemeData? theme,
-    List<String>? attributeTitles,
-    List<String>? attributeIcons,
-  })  : assert(
-          attributeTitles == null || attributeTitles.length == attributesCount,
-          "List of Attribute Titles must be of length $attributesCount.\n"
-          " You need to provide titles for all attributes",
-        ),
-        assert(
-          attributeIcons == null || attributeIcons.length == attributesCount,
-          "List of Attribute Icon paths must be of length $attributesCount.\n"
-          " You need to provide icon paths for all attributes",
-        ),
-        this.theme = theme ?? FluttermojiThemeData.standard,
-        this.attributeTitles = attributeTitles ?? defaultAttributeTitles,
-        this.attributeIcons = attributeIcons ?? defaultAttributeIcons,
-        this.controller = controller ?? FluttermojiController(Fluttermoji.defaultEmoji()),
+  })  : this.theme = theme ?? FluttermojiThemeData.standard,
+        this.controller =
+            controller ?? FluttermojiController(Fluttermoji.defaultEmoji()),
         super(key: key);
 
   final double? scaffoldHeight;
@@ -54,27 +41,6 @@ class FluttermojiCustomizer extends StatefulWidget {
   /// Configuration for the overall visual theme for this widget
   /// and the components within it.
   final FluttermojiThemeData theme;
-
-  /// List of titles that are rendered at the top of the widget, indicating
-  /// which attribute the user is customizing.
-  ///
-  /// Overrides the default titles specified in [defaultAttributeTitles]
-  ///
-  /// Length of [attributeTitles] must be **11**
-  final List<String> attributeTitles;
-
-  /// List of icons that are rendered in the bottom row, indicating
-  /// the attributes available to modify.
-  ///
-  /// Overrides the default icons specified in [defaultAttributeIcons]
-  ///
-  /// Length of [attributeIcons] must be **11**
-  ///
-  /// Ensure that the path to the icons is valid and that the resources
-  /// are included  as an asset in *pubspec.yaml*.
-  ///
-  /// **Only SVG files are supported as of now.**
-  final List<String> attributeIcons;
 
   final FluttermojiController controller;
 
@@ -127,13 +93,7 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
       height: widget.scaffoldHeight ?? (size.height * heightFactor),
       width: widget.scaffoldWidth ?? size.width,
       child: body(
-        attributes: List<AttributeItem>.generate(
-            attributesCount,
-            (index) => AttributeItem(
-                iconAsset: widget.attributeIcons[index],
-                title: widget.attributeTitles[index],
-                key: Attribute.values[index]),
-            growable: false),
+        attributes: attributeItems,
       ),
     );
   }
@@ -254,12 +214,11 @@ class _FluttermojiCustomizerState extends State<FluttermojiCustomizer>
       var bottomNavWidget = Padding(
           padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 12),
           child: SvgPicture.asset(
-            attribute.iconAsset!,
+            attribute.iconAsset,
             package: 'fluttermoji',
-            height: attribute.iconsize ??
-                (widget.scaffoldHeight != null
-                    ? widget.scaffoldHeight! / heightFactor * 0.03
-                    : size.height * 0.03),
+            height: widget.scaffoldHeight != null
+                ? widget.scaffoldHeight! / heightFactor * 0.03
+                : size.height * 0.03,
             color: attributeIndex == tabController.index
                 ? widget.theme.selectedIconColor
                 : widget.theme.unselectedIconColor,

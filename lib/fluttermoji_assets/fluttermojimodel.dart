@@ -29,21 +29,59 @@ final Map<Attribute, FluttermojiPropertyItem> fluttermojiProperties = {
 class AttributeItem {
   String title;
   Attribute key;
-  String? iconAsset;
-  double? iconsize;
+  String iconAsset;
+
   AttributeItem(
-      {this.iconsize, this.title = "Unnamed", this.key = Attribute.skinColor, this.iconAsset});
+      {required this.title, required this.key, required this.iconAsset});
 }
+
+// This list determines order of Attributes in customizer.
+final attributeItems = [
+  AttributeItem(key: Attribute.topType,
+      iconAsset: "attributeicons/hair.svg",
+      title: "Hairstyle"),
+  AttributeItem(key: Attribute.hairColor,
+      iconAsset: "attributeicons/haircolor.svg",
+      title: "Hair Colour"),
+  AttributeItem(key: Attribute.facialHairType,
+      iconAsset: "attributeicons/beard.svg",
+      title: "Facial Hair"),
+  AttributeItem(key: Attribute.facialHairColor,
+      iconAsset: "attributeicons/beardcolor.svg",
+      title: "Facial Hair Colour"),
+  AttributeItem(key: Attribute.clotheType,
+      iconAsset: "attributeicons/outfit.svg",
+      title: "Outfit"),
+  AttributeItem(key: Attribute.clotheColor,
+      iconAsset: "attributeicons/outfitcolor.svg",
+      title: "Outfit Colour"),
+  AttributeItem(key: Attribute.eyeType,
+      iconAsset: "attributeicons/eyes.svg",
+      title: "Eyes"),
+  AttributeItem(key: Attribute.eyebrowType,
+      iconAsset: "attributeicons/eyebrow.svg",
+      title: "Eyebrows"),
+  AttributeItem(key: Attribute.mouthType,
+      iconAsset: "attributeicons/mouth.svg",
+      title: "Mouth"),
+  AttributeItem(key: Attribute.skinColor,
+      iconAsset: "attributeicons/skin.svg",
+      title: "Skin"),
+  AttributeItem(key: Attribute.accessoriesType,
+      iconAsset: "attributeicons/accessories.svg",
+      title: "Accessories"),
+];
 
 class FluttermojiPropertyItem extends ChangeNotifier {
   final String title;
   int choice;
   final List<String> property;
+
   FluttermojiPropertyItem({
     this.title = "Unnamed",
     this.choice = 0,
     property,
-  }): property = property ?? [];
+  }) : property = property ?? [];
 }
 
 const String emptySVGIcon = '''

@@ -1,5 +1,3 @@
-import 'package:fluttermoji/fluttermoji.dart';
-
 import 'fluttermoji_assets/clothes/clothes.dart';
 import 'fluttermoji_assets/face/eyebrow/eyebrow.dart';
 import 'fluttermoji_assets/face/eyes/eyes.dart';
@@ -14,10 +12,10 @@ import 'fluttermoji_assets/top/hairStyles/hairStyle.dart';
 
 enum Attribute {
   topType,
-  accessoriesType,
   hairColor,
   facialHairType,
   facialHairColor,
+  accessoriesType,
   clotheType,
   eyeType,
   eyebrowType,
