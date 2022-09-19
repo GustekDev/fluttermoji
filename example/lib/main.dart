@@ -15,94 +15,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       // darkTheme: ThemeData.dark(),
-      home: MyHomePage(title: 'Fluttermoji'),
+      home: HomePage(FluttermojiController(Fluttermoji.defaultEmoji())),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
-  final String? title;
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title!),
-        centerTitle: true,
-      ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          SizedBox(
-            height: 25,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Use your Fluttermoji anywhere\nwith the below widget",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          FluttermojiCircleAvatar(
-            Fluttermoji.defaultEmoji(),
-            backgroundColor: Colors.grey[200],
-            radius: 100,
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "and create your own page to customize them using our widgets",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Row(
-            children: [
-              Spacer(flex: 2),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  height: 35,
-                  child: ElevatedButton.icon(
-                    icon: Icon(Icons.edit),
-                    label: Text("Customize"),
-                    onPressed: () => Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => NewPage(FluttermojiController(Fluttermoji.defaultEmoji())))),
-                  ),
-                ),
-              ),
-              Spacer(flex: 2),
-            ],
-          ),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class NewPage extends StatelessWidget {
+class HomePage extends StatelessWidget {
 
   final FluttermojiController fluttermojiController;
-  const NewPage(this.fluttermojiController, {Key? key}) : super(key: key);
+  const HomePage(this.fluttermojiController, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
