@@ -65,6 +65,8 @@ class Fluttermoji {
 
   Fluttermoji.defaultEmoji() : selectedAttributes = Map();
 
+  Fluttermoji.fromMap(Map<Attribute, int> map) : selectedAttributes = map;
+
   /// Decode your string containing the attributes to a SVG and render it
   /// by enclosing this string with a SvgPicture.string()
   String getSVG() {
@@ -133,12 +135,13 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     return fluttermojiProperties[type]!.property.elementAt(value);
   }
 
-  Fluttermoji.fromJson(Map<String, dynamic> json)
-      : selectedAttributes = Map.fromEntries(
-            Attribute.values.map((e) => MapEntry(e, json[e.toString()] ?? 0)));
+  static Fluttermoji? fromJson(Map<String, dynamic> json) {
+    return Fluttermoji.fromMap(Map.fromEntries(
+        Attribute.values.map((e) => MapEntry(e, json[e.toString()] ?? 0))));
+  }
 
-  static Map<String, dynamic> toJson(Fluttermoji value) => Map.fromEntries(
-      Attribute.values.map((e) => MapEntry(e.toString(), value.get(e))));
+  Map<String, dynamic> toJson() => Map.fromEntries(
+      Attribute.values.map((e) => MapEntry(e.toString(), get(e))));
 
   bool operator ==(Object other) =>
       other is Fluttermoji &&
