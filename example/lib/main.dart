@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                   builder: (context, child) => FluttermojiCircleAvatar(
                     this.fluttermojiController.value,
                     radius: 100,
-                    backgroundColor: Colors.grey[200],
+                    backgroundColor: Colors.grey[200]!,
                   ),
                 ),
               ),
