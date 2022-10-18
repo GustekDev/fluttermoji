@@ -29,27 +29,27 @@ enum Attribute {
 class Fluttermoji {
   final Map<Attribute, int> selectedAttributes;
 
-  int get topType => selectedAttributes[Attribute.topType] ?? 4;
+  int get topType => selectedAttributes[Attribute.topType] ?? 0;
 
   int get accessoriesType => selectedAttributes[Attribute.accessoriesType] ?? 0;
 
-  int get hairColor => selectedAttributes[Attribute.hairColor] ?? 1;
+  int get hairColor => selectedAttributes[Attribute.hairColor] ?? 0;
 
   int get facialHairType => selectedAttributes[Attribute.facialHairType] ?? 0;
 
-  int get facialHairColor => selectedAttributes[Attribute.facialHairColor] ?? 1;
+  int get facialHairColor => selectedAttributes[Attribute.facialHairColor] ?? 0;
 
-  int get clotheType => selectedAttributes[Attribute.clotheType] ?? 4;
+  int get clotheType => selectedAttributes[Attribute.clotheType] ?? 0;
 
   int get eyeType => selectedAttributes[Attribute.eyeType] ?? 0;
 
   int get eyebrowType => selectedAttributes[Attribute.eyebrowType] ?? 0;
 
-  int get mouthType => selectedAttributes[Attribute.mouthType] ?? 1;
+  int get mouthType => selectedAttributes[Attribute.mouthType] ?? 0;
 
   int get skinColor => selectedAttributes[Attribute.skinColor] ?? 0;
 
-  int get clotheColor => selectedAttributes[Attribute.clotheColor] ?? 1;
+  int get clotheColor => selectedAttributes[Attribute.clotheColor] ?? 0;
 
   int get style => selectedAttributes[Attribute.style] ?? 0;
 
