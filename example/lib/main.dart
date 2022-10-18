@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       // darkTheme: ThemeData.dark(),
-      home: HomePage(FluttermojiController(Fluttermoji.defaultEmoji())),
+      home: HomePage(FluttermojiController(Fluttermoji.random())),
     );
   }
 }

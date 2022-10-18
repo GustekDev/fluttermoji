@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'fluttermoji_assets/clothes/clothes.dart';
 import 'fluttermoji_assets/face/eyebrow/eyebrow.dart';
 import 'fluttermoji_assets/face/eyes/eyes.dart';
@@ -64,6 +66,13 @@ class Fluttermoji {
   }
 
   Fluttermoji.defaultEmoji() : selectedAttributes = Map();
+
+  Fluttermoji.random() : selectedAttributes = Map() {
+    var random = new Random();
+    fluttermojiProperties.forEach((key, value) {
+      selectedAttributes[key] = random.nextInt(value.property.length);
+    });
+  }
 
   Fluttermoji.fromMap(Map<Attribute, int> map) : selectedAttributes = map;
 
