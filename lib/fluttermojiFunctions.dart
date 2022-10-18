@@ -29,31 +29,31 @@ enum Attribute {
 class Fluttermoji {
   final Map<Attribute, int> selectedAttributes;
 
-  int get topType => selectedAttributes[Attribute.topType] ?? 0;
+  int get topType => get(Attribute.topType);
 
-  int get accessoriesType => selectedAttributes[Attribute.accessoriesType] ?? 0;
+  int get accessoriesType => get(Attribute.accessoriesType);
 
-  int get hairColor => selectedAttributes[Attribute.hairColor] ?? 0;
+  int get hairColor => get(Attribute.hairColor);
 
-  int get facialHairType => selectedAttributes[Attribute.facialHairType] ?? 0;
+  int get facialHairType => get(Attribute.facialHairType);
 
-  int get facialHairColor => selectedAttributes[Attribute.facialHairColor] ?? 0;
+  int get facialHairColor => get(Attribute.facialHairColor);
 
-  int get clotheType => selectedAttributes[Attribute.clotheType] ?? 0;
+  int get clotheType => get(Attribute.clotheType);
 
-  int get eyeType => selectedAttributes[Attribute.eyeType] ?? 0;
+  int get eyeType => get(Attribute.eyeType);
 
-  int get eyebrowType => selectedAttributes[Attribute.eyebrowType] ?? 0;
+  int get eyebrowType => get(Attribute.eyebrowType);
 
-  int get mouthType => selectedAttributes[Attribute.mouthType] ?? 0;
+  int get mouthType => get(Attribute.mouthType);
 
-  int get skinColor => selectedAttributes[Attribute.skinColor] ?? 0;
+  int get skinColor => get(Attribute.skinColor);
 
-  int get clotheColor => selectedAttributes[Attribute.clotheColor] ?? 0;
+  int get clotheColor => get(Attribute.clotheColor);
 
-  int get style => selectedAttributes[Attribute.style] ?? 0;
+  int get style => get(Attribute.style);
 
-  int get graphicType => selectedAttributes[Attribute.graphicType] ?? 0;
+  int get graphicType => get(Attribute.graphicType);
 
   void set(Attribute attribute, int value) {
     selectedAttributes[attribute] = value;
